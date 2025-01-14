@@ -13,15 +13,15 @@ db = SQLAlchemy(app)
 
 # Models
 class Dealer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    location = db.Column(db.String(100), nullable=False)
+    dealer_id = db.Column(db.Integer, primary_key=True)
+    dealer_name = db.Column(db.String(100), nullable=False)
+    dealer_location = db.Column(db.String(100), nullable=False)
 
 
 class Car(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    model = db.Column(db.String(100), nullable=False)
-    color = db.Column(db.String(50), nullable=False)
+    car_id = db.Column(db.Integer, primary_key=True)
+    car_model = db.Column(db.String(100), nullable=False)
+    car_color = db.Column(db.String(50), nullable=False)
     dealer_id = db.Column(db.Integer, db.ForeignKey('dealer.id'), nullable=False)
 
 
@@ -38,11 +38,11 @@ def handle_dealers():
         db.session.add(dealer)
         db.session.commit()
         return jsonify({'message': 'Dealer added',
-                        'dealer': {'id': dealer.id, 'name': dealer.name, 'location': dealer.location}}), 201
+                        'dealer': {'id': dealer.dealer_id, 'name': dealer.dealer_name, 'location': dealer.dealer_location}}), 201
 
     if request.method == 'GET':
         dealers = Dealer.query.all()
-        return jsonify({'dealers': [{'id': d.id, 'name': d.name, 'location': d.location} for d in dealers]}), 200
+        return jsonify({'dealers': [{'id': d.dealer_id, 'name': d.dealer_name, 'location': d.dealer_location} for d in dealers]}), 200
 
     if request.method == 'DELETE':
         data = request.get_json()
@@ -72,7 +72,7 @@ def handle_cars():
         db.session.add(car)
         db.session.commit()
         return jsonify({'message': 'Car added',
-                        'car': {'id': car.id, 'model': car.model, 'color': car.color, 'dealer_id': car.dealer_id}}), 201
+                        'car': {'id': car.car_id, 'model': car.car_model, 'color': car.car_color, 'dealer_id': car.dealer_id}}), 201
 
     if request.method == 'GET':
         dealer_id = request.args.get('dealer_id')
@@ -90,7 +90,7 @@ def handle_cars():
 
         cars = query.all()
         return jsonify(
-            {'cars': [{'id': c.id, 'model': c.model, 'color': c.color, 'dealer_id': c.dealer_id} for c in cars]}), 200
+            {'cars': [{'id': c.dealer_id, 'model': c.car_model, 'color': c.car_color, 'dealer_id': c.dealer_id} for c in cars]}), 200
 
     if request.method == 'DELETE':
         data = request.get_json()
